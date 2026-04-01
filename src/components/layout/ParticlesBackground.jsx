@@ -1,6 +1,5 @@
-// src/components/layout/ParticleBackground.jsx
 import { memo, useCallback } from 'react';
-import Particles from 'react-tsparticles';
+import Particles from 'react-particles';
 import { loadFull } from 'tsparticles';
 
 const ParticleBackground = ({ darkMode }) => {
@@ -15,12 +14,15 @@ const ParticleBackground = ({ darkMode }) => {
   return (
     <div className="fixed inset-0 z-[-1] pointer-events-none">
       <Particles
+        id="tsparticles"
         init={particlesInit}
         options={{
           fullScreen: false,
           fpsLimit: 60,
           particles: {
-            color: { value: particleColors },
+            color: {
+              value: particleColors,
+            },
             links: {
               color: darkMode ? '#444444' : '#9ca3af',
               distance: 180,
@@ -32,21 +34,45 @@ const ParticleBackground = ({ darkMode }) => {
               enable: true,
               speed: 1.5,
               random: true,
-              outModes: { default: 'out' },
+              outModes: {
+                default: 'out',
+              },
             },
             number: {
-              density: { enable: true, area: 800 },
+              density: {
+                enable: true,
+                area: 800,
+              },
               value: 70,
             },
-            opacity: { value: darkMode ? 0.5 : 0.7, random: true },
-            shape: { type: 'circle' },
-            size: { value: 4, random: true },
+            opacity: {
+              value: darkMode ? 0.5 : 0.7,
+              random: true,
+            },
+            shape: {
+              type: 'circle',
+            },
+            size: {
+              value: 4,
+              random: true,
+            },
           },
           interactivity: {
-            events: { onHover: { enable: false }, onClick: { enable: false } },
+            events: {
+              onHover: {
+                enable: false,
+              },
+              onClick: {
+                enable: false,
+              },
+            },
           },
           detectRetina: false,
-          background: { color: { value: 'transparent' } },
+          background: {
+            color: {
+              value: 'transparent',
+            },
+          },
         }}
         className="absolute inset-0 w-full h-full"
       />
