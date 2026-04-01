@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import ProfilePhoto from '../../../../assets/img/Foto-Profil.jpg';
+import ProfilePhoto from '../../../assets/img/Foto-Profil.jpg';
 import { useInView } from 'react-intersection-observer';
 import { containerVariants } from './constants/heroVariants';
 import { useTypingAnimation } from './hooks/useTypingAnimation';
