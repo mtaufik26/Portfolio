@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import CV from '../../../../assets/pdf/CV - Muhammad Taufik Ediansyah.pdf'
 import { itemVariants } from '../constants/heroVariants';
 
 export const CTAButtons = () => {
@@ -36,7 +37,7 @@ export const CTAButtons = () => {
   return (
     <motion.div className="flex flex-wrap gap-3 sm:gap-4 mt-8 sm:mt-12" variants={itemVariants}>
       <motion.a
-        href="/src/assets/pdf/CV - Muhammad Taufik Ediansyah.pdf"
+        href={CV}
         download="CV_Taufik.pdf"
         className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg sm:rounded-xl font-semibold text-base sm:text-lg overflow-hidden"
         whileHover={{ scale: 1.03, y: -2 }}
@@ -50,7 +51,7 @@ export const CTAButtons = () => {
       </motion.a>
 
       <motion.a
-        href="/src/assets/pdf/CV - Muhammad Taufik Ediansyah.pdf"
+        href={CV}
         target="_blank"
         rel="noopener noreferrer"
         className="group px-6 sm:px-8 py-3 sm:py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg sm:rounded-xl font-semibold text-base sm:text-lg hover:border-gray-400 dark:hover:border-gray-400 flex items-center gap-2 sm:gap-3"
