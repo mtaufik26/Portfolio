@@ -2,6 +2,7 @@
 import { useState } from 'react';
 // ✅ Import utility function yang sudah Anda buat
 import { sendContactEmail } from '../utils/emailService';
+import { sanitizeInput } from '../utils/validation';
 import { useFormField } from './useFormField';
 
 export const useContactForm = () => {
@@ -9,6 +10,8 @@ export const useContactForm = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [focusedField, setFocusedField] = useState(null);
+  // Honeypot field — invisible to real users, filled by bots
+  const [honeypot, setHoneypot] = useState('');
 
   const nameField = useFormField('', (val) => {
     if (!val?.trim()) return 'Name is required';
@@ -72,6 +75,16 @@ export const useContactForm = () => {
 
     if (!isValid) return;
 
+    // Honeypot check — silently reject bot submissions
+    if (honeypot) {
+      // Simulate success to avoid tipping off the bot
+      setSubmitSuccess(true);
+      nameField.reset();
+      emailField.reset();
+      messageField.reset();
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       setSubmitError('');
@@ -79,10 +92,11 @@ export const useContactForm = () => {
 
       // ✅ PANGGIL UTILITY FUNCTION (bukan emailjs.send langsung)
       // formData harus match dengan yang diharapkan sendContactEmail
+      // Sanitize inputs before submission as defense-in-depth
       const formData = {
-        name: nameField.value,
-        email: emailField.value,
-        message: messageField.value,
+        name: sanitizeInput(nameField.value),
+        email: sanitizeInput(emailField.value),
+        message: sanitizeInput(messageField.value),
       };
 
       await sendContactEmail(formData);
@@ -94,9 +108,14 @@ export const useContactForm = () => {
       messageField.reset();
 
     } catch (error) {
-      // ❌ Gagal: tampilkan error yang informatif
-      console.error('❌ Form submission error:', error);
-      setSubmitError(error.message || 'Failed to send message. Please try again.');
+      // ❌ Gagal: tampilkan error yang informatif (don't leak internal details)
+      const safeMessage = error.message?.includes('Too many submissions')
+        ? error.message
+        : 'Failed to send message. Please try again.';
+      if (import.meta.env?.DEV) {
+        console.error('❌ Form submission error:', error);
+      }
+      setSubmitError(safeMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -117,6 +136,8 @@ export const useContactForm = () => {
     focusedField,
     isSubmitting,
     submitSuccess,
+    honeypot,
+    setHoneypot,
     handleChange,
     handleFocus,
     handleBlur,

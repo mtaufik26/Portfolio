@@ -1,22 +1,27 @@
 import { motion } from 'framer-motion';
 import { itemVariants } from '../constants/certificateVariants';
+import { FiCheckCircle } from 'react-icons/fi';
 
 export const StatsBadge = ({ count }) => {
   return (
     <motion.div 
-      className="flex justify-center mb-10"
+      className="flex justify-center mb-8 sm:mb-10"
       variants={itemVariants}
     >
-      <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/40 dark:bg-gray-800/30 backdrop-blur-sm border border-gray-200/40 dark:border-gray-700/40">
-        <div className="flex items-center gap-1">
-          <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812z" clipRule="evenodd" />
-          </svg>
-          <span className="text-sm font-semibold text-gray-900 dark:text-white">
-            {count}
-          </span>
-        </div>
-        <span className="text-xs text-gray-500 dark:text-gray-400">Verified Certificates</span>
+      <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full
+        bg-white/80 dark:bg-[#12131a]/80 backdrop-blur-md
+        border border-neutral-200/80 dark:border-white/[0.08]
+        hover:border-blue-500/40 dark:hover:border-blue-500/30
+        shadow-[0_2px_8px_rgba(0,0,0,0.03)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.4)]
+        transition-colors duration-200"
+      >
+        <FiCheckCircle className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+        <span className="font-mono text-xs font-bold text-neutral-900 dark:text-white">
+          {count}
+        </span>
+        <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 font-medium">
+          Verified Accreditations
+        </span>
       </div>
     </motion.div>
   );

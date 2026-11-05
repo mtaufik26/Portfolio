@@ -1,20 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+// Cache URLs that failed once to avoid redundant network 404 retries and re-render flashes
+const failedImageUrls = new Set();
 
 /**
- * Custom hook untuk handle error loading gambar dengan fallback
+ * Custom hook untuk handle error loading gambar dengan fallback deklaratif
  * @param {string} src - URL gambar utama
  * @returns {Object} currentSrc, showError, handleError
  */
 export const useImageError = (src) => {
-  const [showError, setShowError] = useState(false);
+  const [showError, setShowError] = useState(() => !src || failedImageUrls.has(src));
 
-  const handleError = (e) => {
+  useEffect(() => {
+    setShowError(!src || failedImageUrls.has(src));
+  }, [src]);
+
+  const handleError = () => {
+    if (src) failedImageUrls.add(src);
     setShowError(true);
-    if (e?.target?.style) {
-      e.target.style.display = 'none';
-      const fallback = e.target.nextElementSibling;
-      if (fallback) fallback.style.display = 'flex';
-    }
   };
 
   return {

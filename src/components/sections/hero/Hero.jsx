@@ -1,70 +1,43 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
-import ProfilePhoto from '../../../assets/img/Foto-Profil.jpg';
+import ProfilePhoto from '../../../assets/img/Foto_Profil.webp';
 import { useInView } from 'react-intersection-observer';
 import { containerVariants } from './constants/heroVariants';
-import { useTypingAnimation } from './hooks/useTypingAnimation';
 import { BackgroundEffects } from './components/BackgroundEffects';
 import { HeroContent } from './components/HeroContent';
 import { HeroPhoto } from './components/HeroPhoto';
 
-// ── CONFIG ──
-const TYPING_TEXTS = ['Frontend Developer', 'Web Developer'];
-const TYPING_CONFIG = {
-  typingSpeed: 120,
-  deletingSpeed: 80,
-  pauseDuration: 1200,
-};
-
-const Hero = () => {
+const Hero = ({ isLoaded = true }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
-  const { displayText } = useTypingAnimation(
-    TYPING_TEXTS,  // ✅ Array teks
-    inView,
-    TYPING_CONFIG
-  );
-
-  const contentData = {
-    displayName: { first: 'Taufik', last: 'Ediansyah' }, 
-    photo: {
-      src: ProfilePhoto,
-      alt: 'Taufik Ediansyah - Developer Portfolio',
-      badge: 'React.js',
-    },
-  };
+  const shouldAnimate = isLoaded && inView;
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      className="min-h-screen flex items-center px-4 sm:px-6 lg:px-8 xl:px-12 relative overflow-hidden"
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      style={{ perspective: 1000 }}
+      className="relative min-h-[calc(100vh-4rem)] md:min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 xl:px-12 py-12 sm:py-16 lg:py-20 overflow-hidden"
     >
       <BackgroundEffects />
 
-      <div className="container mx-auto relative z-10">
+      <div className="w-full max-w-7xl mx-auto relative z-10">
         <motion.div
-          className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 xl:gap-16"
+          className="flex flex-col lg:flex-row items-center justify-between gap-10 sm:gap-12 lg:gap-14 xl:gap-16"
+          initial="hidden"
+          animate={shouldAnimate ? 'visible' : 'hidden'}
           variants={containerVariants}
         >
-          <HeroContent
-            displayName={contentData.displayName}
-            displayTypingText={displayText}  // ✅ Akan berganti: Frontend Developer ↔ Web Developer
-          />
-
           <HeroPhoto
-            photoSrc={contentData.photo.src}
-            altText={contentData.photo.alt}
-            badgeText={contentData.photo.badge}
+            photoSrc={ProfilePhoto}
+            altText="Taufik Ediansyah - Frontend Developer"
           />
+          <HeroContent />
         </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
-export default Hero;
+export default memo(Hero);

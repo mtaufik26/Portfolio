@@ -7,7 +7,7 @@ import { useInView } from 'react-intersection-observer';
 export const useProjectsAnimation = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.2,
+    threshold: 0.08,
   });
 
   return { ref, inView };

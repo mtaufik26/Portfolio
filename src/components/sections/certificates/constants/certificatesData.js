@@ -1,53 +1,60 @@
+import AIAgentCert from '../../../../assets/img/Sertifikat/Sertifikat-AI-Agent-Programming-Hacktiv8.webp';
+import VueJSCert from '../../../../assets/img/Sertifikat/Sertifikat-Frontend-VueJS-WanTeknologi.webp';
+import CyberLabsCert from '../../../../assets/img/Sertifikat/Sertifikat-Backend-Javascript-CyberLabs.webp';
+import UIUXDaffascriptCert from '../../../../assets/img/Sertifikat/Sertifikat-Seminar-UIUX-Daffascript.webp';
+import LifetechMagangCert from '../../../../assets/img/Sertifikat/Sertifikat-Magang-Lifetech.webp';
+
+// Export foto .webp sertifikat
+export {
+  AIAgentCert,
+  VueJSCert,
+  CyberLabsCert,
+  UIUXDaffascriptCert,
+  LifetechMagangCert,
+};
+
 export const certificates = [
   {
-    id: 'react-advanced',
-    title: 'Advanced React Patterns',
-    issuer: 'Frontend Masters',
-    date: 'March 2025',
-    credential: 'FM-REACT-2025',
-    image: '/src/assets/img/cert1.jpg',
+    id: 'ai-agent-programming',
+    title: 'IT - AI Agent for Programming',
+    issuer: 'IBM SkillsBuild & Hacktiv8',
+    date: '27 October 2026',
+    credential: '16097/H8/CSR/ISUE/V/2026',
+    image: AIAgentCert,
   },
   {
-    id: 'nodejs-backend',
-    title: 'Node.js Backend Development',
-    issuer: 'Udemy',
-    date: 'November 2024',
-    credential: 'UD-NODE-1124',
-    image: '/src/assets/img/Logo.png',
+    id: 'frontend-vuejs',
+    title: 'Front-end Development with Vue.js',
+    issuer: 'WAN Teknologi & Vue.js',
+    date: 'November 2023',
+    credential: 'WT-VUEJS-2023',
+    image: VueJSCert,
   },
   {
-    id: 'aws-dev',
-    title: 'AWS Certified Developer',
-    issuer: 'Amazon Web Services',
-    date: 'August 2024',
-    credential: 'AWS-DEV-0824',
-    image: '/src/assets/img/cert3.jpg',
+    id: 'backend-javascript-cyberlabs',
+    title: 'Backend Development with JavaScript Framework',
+    issuer: 'CyberLabs (PT Laskar Teknologi Mulia)',
+    date: '10 November 2023',
+    credential: '2154/S-CYBERLABS/XI/2023',
+    image: CyberLabsCert,
   },
   {
-    id: 'freecodecamp-rwd',
-    title: 'Responsive Web Design',
-    issuer: 'freeCodeCamp',
-    date: 'June 2024',
-    credential: 'FCC-RWD-0624',
-    image: '/src/assets/img/cert4.jpg',
+    id: 'uiux-zero-to-hero',
+    title: 'Berkarir di UI UX from Zero to Hero',
+    issuer: 'Daffascript Agency',
+    date: '4 Februari 2025',
+    credential: 'DAFFASCRIPT-UIUX-2025',
+    image: UIUXDaffascriptCert,
   },
   {
-    id: 'typescript-fund',
-    title: 'TypeScript Fundamentals',
-    issuer: 'Pluralsight',
-    date: 'April 2024',
-    credential: 'PS-TS-0424',
-    image: '/src/assets/img/cert5.jpg',
-  },
-  {
-    id: 'uiux-principles',
-    title: 'UI/UX Design Principles',
-    issuer: 'Coursera',
-    date: 'February 2024',
-    credential: 'CO-UIUX-0224',
-    image: '/src/assets/img/cert6.jpg',
+    id: 'magang-lifetech',
+    title: 'Program Magang 6 Bulan (Sangat Baik)',
+    issuer: 'PT Lifetech Tanpa Batas',
+    date: '10 Januari 2025',
+    credential: 'LIFETECH-MAGANG-2025',
+    image: LifetechMagangCert,
   },
 ];
 
 export const CARD_WIDTH = 340;
-export const SCROLL_THRESHOLD = 20;
+export const SCROLL_THRESHOLD = 20;

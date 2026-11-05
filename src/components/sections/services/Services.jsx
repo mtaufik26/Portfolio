@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { containerVariants } from './constants/serviceVariants';
 import { useServiceAnimation } from './hooks/useServiceAnimation';
@@ -9,22 +10,25 @@ const Services = () => {
   const { ref, inView } = useServiceAnimation();
 
   return (
-    <motion.section
+    <div
       ref={ref}
-      id="services"
-      className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden"
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      variants={containerVariants}
+      className="relative py-16 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 xl:px-12 overflow-hidden scroll-mt-20 sm:scroll-mt-24"
     >
       <BackgroundEffects />
 
-      <div className="max-w-7xl mx-auto">
-        <ServicesHeader />
-        <ServicesGrid />
+      <div className="max-w-7xl mx-auto relative z-10">
+        <motion.div
+          className="space-y-12 sm:space-y-16"
+          initial="hidden"
+          animate={inView ? 'visible' : 'hidden'}
+          variants={containerVariants}
+        >
+          <ServicesHeader />
+          <ServicesGrid />
+        </motion.div>
       </div>
-    </motion.section>
+    </div>
   );
 };
 
-export default Services;
+export default memo(Services);

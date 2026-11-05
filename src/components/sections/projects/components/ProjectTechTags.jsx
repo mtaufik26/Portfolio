@@ -8,19 +8,12 @@ export const ProjectTechTags = ({ techStack }) => {
       </p>
       <div className="flex flex-wrap gap-2">
         {techStack.map((tech, idx) => (
-          <motion.span
+          <span
             key={idx}
-            className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700/50 text-xs text-gray-700 dark:text-gray-300 rounded-lg border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-sm cursor-default"
-            whileHover={{ 
-              scale: 1.05,
-              backgroundColor: "rgb(59 130 246 / 0.1)",
-              borderColor: "rgb(59 130 246 / 0.3)",
-              transition: { duration: 0.2 }
-            }}
-            transition={{ duration: 0.3 }}
+            className="group inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-white/90 dark:bg-[#0D0D10]/90 backdrop-blur-sm text-neutral-800 dark:text-neutral-200 border border-neutral-200/90 dark:border-white/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover:border-neutral-300 dark:hover:border-white/20 hover:bg-neutral-50/80 dark:hover:bg-white/[0.04] transition-colors duration-200 select-none cursor-default"
           >
-            {tech}
-          </motion.span>
+            <span className="group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">{tech}</span>
+          </span>
         ))}
       </div>
     </div>

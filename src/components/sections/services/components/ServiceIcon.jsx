@@ -1,15 +1,7 @@
-import { motion } from 'framer-motion';
-
-export const ServiceIcon = ({ Icon, isHovered }) => {
+export const ServiceIcon = ({ Icon }) => {
   return (
-    <div className="relative mb-7">
-      {/* Glow effect behind icon */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl blur-xl opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-      
-      {/* Icon container */}
-      <div className="relative inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-gray-500/10 to-gray-800/10 dark:from-gray-400/10 dark:to-gray-700/10 border border-blue-200/30 dark:border-gray-400/20 group-hover:border-blue-500/40 dark:group-hover:border-blue-400/40 transition-all duration-300">
-        <Icon className={`w-6 h-6 text-gray-700 group-hover:text-blue-500 dark:text-gray-400 transition-transform duration-300 ${isHovered ? 'scale-110' : ''}`} />
-      </div>
+    <div className="w-12 h-12 rounded-xl bg-neutral-100/90 dark:bg-white/[0.05] border border-neutral-200/90 dark:border-white/[0.08] flex items-center justify-center text-neutral-800 dark:text-neutral-200 group-hover:text-neutral-900 dark:group-hover:text-white group-hover:border-neutral-300 dark:group-hover:border-white/20 group-hover:bg-neutral-100 dark:group-hover:bg-white/[0.08] transition-all duration-300 shadow-sm">
+      <Icon className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" aria-hidden="true" />
     </div>
   );
-};
+};

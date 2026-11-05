@@ -1,27 +1,29 @@
 import { motion } from 'framer-motion';
+import { SectionBadge } from '../../../ui/SectionBadge';
 import { containerVariants, itemVariants } from '../constants/certificateVariants';
 
 export const CertificatesHeader = () => {
   return (
-    <motion.div className="text-center mb-16" variants={containerVariants}>
+    <motion.div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14" variants={containerVariants}>
+      {/* Eyebrow Badge matching Hero/About/Services/Portfolio */}
+      <motion.div variants={itemVariants} className="mb-4">
+        <SectionBadge>Credentials · Verified Learning</SectionBadge>
+      </motion.div>
+
+      {/* Main Title */}
       <motion.h2
-        className="text-4xl sm:text-5xl font-bold mb-5 tracking-tight"
+        className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 tracking-tight text-neutral-900 dark:text-white"
         variants={itemVariants}
       >
-        <span className="bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
-          Professional {" "}
-        </span>
-        <span className="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500 bg-clip-text text-transparent">
-          Certificates
-        </span>
+        Professional Certificates
       </motion.h2>
       
+      {/* Supporting Subtitle */}
       <motion.p
-        className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400 leading-relaxed"
+        className="max-w-2xl mx-auto text-base sm:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed"
         variants={itemVariants}
       >
-        Verified credentials from leading platforms and institutions,
-        demonstrating my commitment to continuous learning.
+        Verified credentials from leading platforms and institutions, demonstrating my commitment to continuous learning and engineering fundamentals.
       </motion.p>
     </motion.div>
   );

@@ -1,35 +1,37 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { transitions } from '../../utils/motion';
 
-const DarkModeToggle = ({ isDarkMode, onToggle }) => {
+const DarkModeToggle = ({ isDarkMode, onToggle, isLoaded = true }) => {
   const iconKey = isDarkMode ? 'dark' : 'light';
   const ariaLabel = isDarkMode 
     ? 'Switch to Light Mode (Currently Dark Mode)' 
     : 'Switch to Dark Mode (Currently Light Mode)';
-  const tooltipText = isDarkMode ? 'Mode Gelap' : 'Mode Terang';
-  const iconColor = isDarkMode ? 'text-blue-400' : 'text-amber-500';
+  const tooltipText = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+  const iconColor = isDarkMode ? 'text-neutral-200' : 'text-neutral-800';
 
   return (
     <motion.button
       onClick={onToggle}
       className="
-        w-10 h-10
-        bg-white/10 dark:bg-black/20
+        w-11 h-11
+        bg-white/80 dark:bg-neutral-900/80
         rounded-full
         flex items-center justify-center
-        shadow-lg
-        backdrop-blur-sm
-        border border-white/10
+        shadow-sm
+        backdrop-blur-md
+        border border-neutral-200/80 dark:border-white/10
         group
-        focus:outline-none focus:ring-2 focus:ring-blue-500
-        hover:bg-white/20 dark:hover:bg-black/30
+        focus:outline-none focus:ring-2 focus:ring-neutral-400/30 dark:focus:ring-white/20
+        hover:border-neutral-400 dark:hover:border-white/20
+        hover:text-neutral-900 dark:hover:text-white
         transition-colors
       "
       aria-label={ariaLabel}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
+      whileHover={{ scale: 1.1, transition: { duration: transitions.duration.fast, ease: transitions.smoothEase } }}
+      whileTap={{ scale: 0.9, transition: { duration: 0.1 } }}
       initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.3 }}
+      animate={isLoaded ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+      transition={{ duration: transitions.duration.normal, delay: 0.15, ease: transitions.smoothEase }}
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -38,7 +40,7 @@ const DarkModeToggle = ({ isDarkMode, onToggle }) => {
           initial={{ rotate: 0, opacity: 0.8 }}
           animate={{ rotate: 180, opacity: 1 }}
           exit={{ rotate: 0, opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: transitions.duration.fast, ease: transitions.smoothEase }}
         >
           {isDarkMode ? (
             <svg className={`w-full h-full ${iconColor}`} fill="currentColor" viewBox="0 0 20 20">

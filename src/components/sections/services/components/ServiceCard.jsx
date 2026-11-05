@@ -1,81 +1,49 @@
 import { motion } from 'framer-motion';
-import {
-  itemVariants,
-  cardHoverVariants,
-} from '../constants/serviceVariants';
-import { useMouseTracking } from '../hooks/useMouseTracking';
+import { cardVariants } from '../constants/serviceVariants';
+import { transitions } from '../../../../utils/motion';
 import { ServiceIcon } from './ServiceIcon';
 import { ServiceTags } from './ServiceTags';
 
 export const ServiceCard = ({ service, index }) => {
-  const {
-    cardRef,
-    handleMouseMove,
-    handleMouseLeave,
-    radialGradient,
-  } = useMouseTracking();
-
   const Icon = service.icon;
-
-  // Tentukan arah slide berdasarkan index: genap=kiri, ganjil=kanan
-  const direction = index % 2 === 0 ? -1 : 1;
 
   return (
     <motion.div
-      key={service.id}
-      ref={cardRef}
       custom={index}
-      
-      // === SCROLL ANIMATION CONFIG ===
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ 
-        once: true,        // Animasi hanya sekali saat masuk viewport
-        margin: "-100px"   // Trigger lebih awal untuk UX yang smoother
-      }}
-      variants={{
-        hidden: { 
-          x: direction * 30,  // Slide dari kiri (-30) atau kanan (+30)
-          opacity: 0,
-          scale: 0.98,        // Scale subtle untuk depth effect
-        },
-        visible: {
-          x: 0,
-          opacity: 1,
-          scale: 1,
-          transition: {
-            duration: 0.5,
-            ease: [0.22, 0.61, 0.36, 1], // Premium cubic bezier easing
-          },
-        },
-        hover: cardHoverVariants.hover,
-      }}
-      
-      // Hover interaction tetap aktif
-      whileHover="hover"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="group relative"
+      variants={cardVariants}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.25, ease: transitions.smoothEase }}
+      className="group relative h-full"
     >
-      {/* Mouse-tracking radial gradient overlay */}
-      <motion.div
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: radialGradient }}
-      />
+      {/* Interactive Card Shell */}
+      <div className="relative h-full p-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-white/90 dark:bg-[#0D0D10]/95 backdrop-blur-md border border-neutral-200/90 dark:border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:border-neutral-300 dark:hover:border-white/20 hover:shadow-lg dark:hover:shadow-black/70 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+        
+        {/* Top Section: Header & Content */}
+        <div className="relative z-10">
+          {/* Card Top Meta Row: Icon + Number Index */}
+          <div className="flex items-center justify-between gap-4 mb-6">
+            <ServiceIcon Icon={Icon} />
 
-      {/* Card content */}
-      <div className="relative h-full bg-white/95 dark:bg-gray-900/30 backdrop-blur-xl rounded-2xl border border-gray-200/30 dark:border-gray-700/30 p-8 transition-all duration-300 hover:border-blue-500/30 dark:hover:border-blue-400/30 shadow-sm hover:shadow-xl">
-        <ServiceIcon Icon={Icon} />
+            <span className="font-mono text-xs font-semibold px-2.5 py-1 rounded-md bg-neutral-100/80 dark:bg-white/[0.04] text-neutral-400 dark:text-neutral-500 border border-neutral-200/60 dark:border-white/[0.06] group-hover:text-neutral-900 dark:group-hover:text-white group-hover:border-neutral-300 dark:group-hover:border-white/20 transition-all duration-300">
+              {service.number || `0${index + 1}`}
+            </span>
+          </div>
 
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
-          {service.title}
-        </h3>
+          {/* Title */}
+          <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 mb-3">
+            {service.title}
+          </h3>
 
-        <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-5">
-          {service.desc}
-        </p>
+          {/* Description */}
+          <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal mb-7">
+            {service.desc}
+          </p>
+        </div>
 
-        <ServiceTags tags={service.tags} />
+        {/* Bottom Section: Focus Tags */}
+        <div className="relative z-10 pt-4 border-t border-neutral-100 dark:border-white/[0.06]">
+          <ServiceTags tags={service.tags} />
+        </div>
       </div>
     </motion.div>
   );

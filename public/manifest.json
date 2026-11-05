@@ -1,0 +1,16 @@
+{
+  "name": "Taufik Ediansyah | Frontend Developer",
+  "short_name": "Taufik.dev",
+  "description": "Portfolio of Taufik Ediansyah - Frontend Developer specializing in React.js, Next.js, and modern responsive web development.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ]
+}

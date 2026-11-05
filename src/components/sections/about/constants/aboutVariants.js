@@ -1,71 +1,37 @@
-// Easing premium yang konsisten
-export const premiumEase = [0.25, 0.1, 0.25, 1];
-export const bounceEase = [0.34, 1.2, 0.64, 1];
+import { transitions } from '../../../../utils/motion';
 
 export const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1,
+      staggerChildren: 0.09,
+      delayChildren: 0.04,
     },
   },
 };
 
 export const itemVariants = {
-  hidden: { opacity: 0, y: 25 },
+  hidden: { opacity: 0, y: 18 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
-      ease: premiumEase,
+      duration: transitions.duration.normal,
+      ease: transitions.smoothEase,
     },
   },
-};
-
-export const techVariants = {
-  hidden: { opacity: 0, scale: 0.92 },
-  visible: (i) => ({
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delay: i * 0.03,
-      duration: 0.4,
-      ease: bounceEase,
-    },
-  }),
 };
 
 export const strengthCardVariants = {
-  hidden: { opacity: 0, x: 20 },
-  visible: (idx) => ({
+  hidden: { opacity: 0, y: 16 },
+  visible: (idx = 0) => ({
     opacity: 1,
-    x: 0,
+    y: 0,
     transition: {
-      delay: 0.2 + (idx * 0.08),
+      delay: 0.04 + (idx * 0.06),
       duration: 0.5,
-      ease: premiumEase,
+      ease: transitions.smoothEase,
     },
   }),
-};
-
-export const backgroundBlobVariants = {
-  left: {
-    initial: { opacity: 0, scale: 0.9 },
-    animate: { 
-      opacity: 0.4, 
-      scale: 1,
-      transition: { duration: 1.2, ease: "easeOut" }
-    }
-  },
-  right: {
-    initial: { opacity: 0, scale: 0.9 },
-    animate: { 
-      opacity: 0.3, 
-      scale: 1,
-      transition: { duration: 1.2, delay: 0.2, ease: "easeOut" }
-    }
-  }
 };

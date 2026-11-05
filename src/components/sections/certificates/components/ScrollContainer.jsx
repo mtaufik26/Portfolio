@@ -18,15 +18,16 @@ export const ScrollContainer = ({ inView, onImageClick, scrollHandlers, showArro
       {/* Cards Container */}
       <div
         ref={scrollHandlers.containerRef}
-        className="flex gap-6 pb-8 pt-4 overflow-x-auto scroll-smooth hide-scrollbar px-2 cursor-grab"
+        className="flex gap-6 pb-8 pt-4 overflow-x-auto hide-scrollbar px-2 cursor-grab"
         {...scrollHandlers.events}
       >
-        {certificates.map((cert) => (
+        {certificates.map((cert, idx) => (
           <CertificateCard 
             key={cert.id} 
             certificate={cert}
+            index={idx}
             inView={inView}
-            onImageClick={onImageClick}
+            onImageClick={() => onImageClick?.(idx)}
           />
         ))}
       </div>

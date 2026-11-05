@@ -12,6 +12,14 @@ dist
 dist-ssr
 *.local
 
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Source maps (do not expose in production)
+*.map
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +30,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+
+# Backup files
+*.bak
+*.backup
+*.tmp

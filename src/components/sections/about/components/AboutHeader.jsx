@@ -1,23 +1,18 @@
 import { motion } from 'framer-motion';
+import { SectionBadge } from '../../../ui/SectionBadge';
 import { itemVariants } from '../constants/aboutVariants';
 
 export const AboutHeader = () => {
   return (
-    <motion.div variants={itemVariants} className="space-y-4">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-0.5 bg-gradient-to-r from-blue-500 to-blue-900 rounded-full" />
-        <span className="text-sm font-medium text-blue-600 dark:text-blue-400 tracking-wider uppercase">
-          About Me
-        </span>
+    <motion.div variants={itemVariants} className="space-y-3 sm:space-y-4">
+      {/* Eyebrow Label */}
+      <div>
+        <SectionBadge>About · Background & Engineering Focus</SectionBadge>
       </div>
-      
-      <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
-        <span className="bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
-          Get to know{' '}
-        </span>
-        <span className="bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-500 dark:to-blue-400 bg-clip-text text-transparent">
-          me better
-        </span>
+
+      {/* Main Heading */}
+      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 dark:text-white leading-[1.15]">
+        Crafting responsive, user-friendly web interfaces with clean code.
       </h2>
     </motion.div>
   );

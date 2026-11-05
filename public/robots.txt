@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://taufikediansyah.vercel.app/sitemap.xml

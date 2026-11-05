@@ -1,27 +1,24 @@
 import { motion } from 'framer-motion';
-import { containerVariants, firstItemVariants } from '../constants/projectVariants';
+import { SectionBadge } from '../../../ui/SectionBadge';
+import { headerVariants } from '../constants/projectVariants';
 
 export const ProjectsHeader = () => {
   return (
-    <motion.div className="text-center mb-12 sm:mb-16" variants={containerVariants}>
-      <motion.h2 
-        className="text-3xl sm:text-4xl font-bold from-gray-900 to-gray-600 dark:text-white mb-4" 
-        variants={firstItemVariants}
-      >
-        <span className="bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
-          Featured {" "}
-        </span>
-        <span className="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500 bg-clip-text text-transparent">
-          Projects
-        </span>
-      </motion.h2>
-      
-      <motion.p
-        className="max-w-2xl mx-auto text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed"
-        variants={firstItemVariants}
-      >
-        A selection of my recent work — built with performance, usability, and clean code in mind.
-      </motion.p>
+    <motion.div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14" variants={headerVariants}>
+      {/* Eyebrow Badge matching Hero/About/Services */}
+      <div className="mb-4">
+        <SectionBadge>Portfolio · Selected Works</SectionBadge>
+      </div>
+
+      {/* Main Title */}
+      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-neutral-900 dark:text-white tracking-tight mb-4">
+        Featured Projects
+      </h2>
+
+      {/* Supporting Subtitle */}
+      <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+        Production web applications, client solutions, and frontend systems — engineered with modern component architecture, responsive design, and polished interactivity.
+      </p>
     </motion.div>
   );
-};
+};

@@ -1,8 +1,8 @@
 import { useRef, useCallback, useEffect } from 'react';
-import { checkScrollPosition, handleWheelScroll } from '../utils/scrollHelpers';
+import { checkScrollPosition, scrollToCard } from '../utils/scrollHelpers';
 
 /**
- * Custom hook untuk mengelola horizontal scroll container dengan drag & wheel support
+ * Custom hook untuk mengelola horizontal scroll container dengan drag & scroll support
  * @param {Function} onScrollPositionChange - Callback ketika posisi scroll berubah
  * @returns {Object} ref, event handlers, scroll state
  */
@@ -15,13 +15,15 @@ export const useScrollContainer = (onScrollPositionChange) => {
   const scrollLeft = useRef(0);
 
   const checkPosition = useCallback(() => {
-    const position = checkScrollPosition(scrollContainerRef.current);
-    onScrollPositionChange?.(position);
+    if (!scrollContainerRef.current) return;
+    const { showLeft, showRight } = checkScrollPosition(scrollContainerRef.current);
+    onScrollPositionChange?.((prev) => {
+      if (prev && prev.showLeft === showLeft && prev.showRight === showRight) {
+        return prev;
+      }
+      return { showLeft, showRight };
+    });
   }, [onScrollPositionChange]);
-
-  const handleWheel = useCallback((e) => {
-    handleWheelScroll(e, scrollContainerRef.current);
-  }, []);
 
   const handleMouseDown = useCallback((e) => {
     if (!scrollContainerRef.current) return;
@@ -29,13 +31,13 @@ export const useScrollContainer = (onScrollPositionChange) => {
     startX.current = e.pageX - scrollContainerRef.current.offsetLeft;
     scrollLeft.current = scrollContainerRef.current.scrollLeft;
     scrollContainerRef.current.style.cursor = 'grabbing';
+    scrollContainerRef.current.style.userSelect = 'none';
   }, []);
 
   const handleMouseMove = useCallback((e) => {
     if (!isDragging.current || !scrollContainerRef.current) return;
-    e.preventDefault();
     const x = e.pageX - scrollContainerRef.current.offsetLeft;
-    const walk = (x - startX.current) * 1.5;
+    const walk = (x - startX.current) * 1.4;
     scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
   }, []);
 
@@ -43,25 +45,36 @@ export const useScrollContainer = (onScrollPositionChange) => {
     isDragging.current = false;
     if (scrollContainerRef.current) {
       scrollContainerRef.current.style.cursor = 'grab';
+      scrollContainerRef.current.style.userSelect = '';
+    }
+  }, []);
+
+  const handleWheel = useCallback((e) => {
+    if (!scrollContainerRef.current) return;
+    // Allow horizontal scrolling on container without blocking main thread
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && Math.abs(e.deltaY) > 5) {
+      scrollContainerRef.current.scrollLeft += e.deltaY * 0.7;
     }
   }, []);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (container) {
-      container.addEventListener('scroll', checkPosition);
+      container.addEventListener('scroll', checkPosition, { passive: true });
       checkPosition();
     }
-    
-    window.addEventListener('wheel', handleWheel, { passive: false });
     
     return () => {
       if (container) {
         container.removeEventListener('scroll', checkPosition);
       }
-      window.removeEventListener('wheel', handleWheel);
     };
-  }, [handleWheel, checkPosition]);
+  }, [checkPosition]);
+
+  const scrollTo = useCallback((direction) => {
+    if (!scrollContainerRef.current) return;
+    scrollToCard(scrollContainerRef.current, direction);
+  }, []);
 
   return {
     scrollContainerRef,
@@ -70,10 +83,8 @@ export const useScrollContainer = (onScrollPositionChange) => {
       onMouseMove: handleMouseMove,
       onMouseUp: handleMouseUp,
       onMouseLeave: handleMouseUp,
+      onWheel: handleWheel,
     },
-    scrollTo: (direction) => {
-      const { scrollToCard } = require('../utils/scrollHelpers');
-      scrollToCard(scrollContainerRef.current, direction);
-    },
+    scrollTo,
   };
 };

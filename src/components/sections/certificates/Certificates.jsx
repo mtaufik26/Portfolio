@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { containerVariants, itemVariants } from './constants/certificateVariants';
 import { certificates } from './constants/certificatesData';
 import { useCertificatesAnimation } from './hooks/useCertificatesAnimation';
@@ -26,21 +26,22 @@ const Certificates = () => {
   const { scrollContainerRef, handlers, scrollTo } =
     useScrollContainer(setShowArrows);
 
-  // Setup keyboard navigation
+  // Setup keyboard navigation (carousel scroll only when inView and modal closed)
   useEffect(() => {
+    if (!inView || modalProps.isOpen) return;
     return setupKeyboardNavigation(
       () => scrollTo(-1),
       () => scrollTo(1),
       modalProps.isOpen
     );
-  }, [modalProps.isOpen, scrollTo]);
+  }, [inView, modalProps.isOpen, scrollTo]);
 
   return (
     <>
       <motion.section
         ref={ref}
         id="certificates"
-        className="relative py-28 px-4 sm:px-6 lg:px-8 overflow-hidden"
+        className="relative py-24 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden"
         initial="hidden"
         animate={inView ? 'visible' : 'hidden'}
         variants={containerVariants}
@@ -61,44 +62,19 @@ const Certificates = () => {
             showArrows={showArrows}
             onScroll={scrollTo}
           />
-
-          {/* Hint Text */}
-          <motion.p
-            className="text-center text-sm text-gray-400 dark:text-gray-500 mt-8"
-            variants={itemVariants}
-          >
-            ← Drag to scroll or use arrow keys →
-            <span className="hidden sm:inline">
-              {' '}
-              | Scroll with mouse wheel
-            </span>
-          </motion.p>
         </div>
       </motion.section>
 
       {/* Modal via Portal */}
-      <CertificateModal {...modalProps} />
+      <AnimatePresence>
+        {modalProps.isOpen && (
+          <CertificateModal {...modalProps} />
+        )}
+      </AnimatePresence>
 
-      {/* Global Styles */}
-      <style jsx global>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
 
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-      `}</style>
     </>
   );
 };
 
-export default Certificates;
+export default memo(Certificates);

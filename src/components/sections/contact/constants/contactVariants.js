@@ -1,42 +1,10 @@
-export const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
+import { baseContainerVariants, baseItemVariants, baseBackgroundBlobVariants, transitions } from '../../../../utils/motion';
 
-export const itemVariants = {
-  hidden: { y: 30, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.6,
-      ease: [0.25, 0.1, 0.25, 1],
-    },
-  },
-};
+export const containerVariants = baseContainerVariants;
 
-export const backgroundBlobVariants = {
-  left: {
-    animate: {
-      x: [0, 40, 0],
-      y: [0, -30, 0],
-      transition: { duration: 25, repeat: Infinity, ease: 'easeInOut' },
-    },
-  },
-  right: {
-    animate: {
-      x: [0, -50, 0],
-      y: [0, 40, 0],
-      transition: { duration: 30, repeat: Infinity, ease: 'easeInOut', delay: 1 },
-    },
-  },
-};
+export const itemVariants = baseItemVariants;
+
+export const backgroundBlobVariants = baseBackgroundBlobVariants;
 
 export const statusMessageVariants = {
   initial: { opacity: 0, y: -10 },
@@ -45,6 +13,6 @@ export const statusMessageVariants = {
 };
 
 export const buttonVariants = {
-  hover: { y: -2, scale: 1.02, transition: { duration: 0.2 } },
+  hover: { y: -2, scale: 1.02, transition: { duration: transitions.duration.fast, ease: transitions.smoothEase } },
   tap: { scale: 0.98, transition: { duration: 0.1 } },
 };

@@ -1,41 +1,41 @@
 import { motion } from 'framer-motion';
 import { toggleButtonVariants } from '../constants/projectVariants';
 
-export const ToggleButton = ({ showAll, hasMore, onToggle }) => {
-  if (!hasMore) return null;
-
+/**
+ * Centered, tactile trigger button for viewing all projects in the archive modal.
+ */
+export const ToggleButton = ({ totalCount, onOpenAll }) => {
   return (
     <motion.div 
-      className="flex justify-end mt-12"
-      {...toggleButtonVariants}
+      className="flex justify-center mt-10 sm:mt-12"
+      variants={toggleButtonVariants}
       initial="initial"
       animate="animate"
     >
       <motion.button
-        onClick={onToggle}
-        className="group relative inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-sm tracking-wide hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-300 cursor-pointer"
-        whileHover={{ x: 4 }}
-        whileTap={{ scale: 0.95 }}
+        onClick={onOpenAll}
+        className="group relative inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl
+          bg-white/80 dark:bg-[#121218]/90 backdrop-blur-md
+          border border-neutral-300/80 dark:border-white/10
+          hover:border-neutral-400 dark:hover:border-white/20
+          text-neutral-900 dark:text-white font-medium text-xs sm:text-sm tracking-wide
+          shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer"
+        whileHover={{ y: -2 }}
+        whileTap={{ scale: 0.98 }}
+        aria-haspopup="dialog"
       >
-        {/* Animated underline effect */}
-        <span className="relative">
-          {showAll ? 'Tampilkan Lebih Sedikit' : 'Lihat Semua Project'}
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-300 to-blue-600 group-hover:w-full transition-all duration-300 ease-out" />
+        <span className="relative font-medium">
+          View All Projects ({totalCount})
         </span>
         
-        {/* Icon dengan animasi */}
-        <motion.span
-          className="flex items-center justify-center w-6 h-6 rounded-full border border-blue-600/30 dark:border-blue-400/30 group-hover:border-blue-600/60 dark:group-hover:border-blue-400/60 group-hover:bg-blue-600/10 transition-all duration-300"
-          animate={{ 
-            rotate: showAll ? 0 : 180,
-            borderColor: showAll ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.6)'
-          }}
-        >
-          <svg className="w-3 h-3 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        {/* Archive Stack Icon */}
+        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-neutral-100 dark:bg-white/[0.08] text-neutral-700 dark:text-neutral-300 group-hover:bg-blue-500 group-hover:text-white transition-colors duration-200">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
-        </motion.span>
+        </span>
       </motion.button>
     </motion.div>
   );
 };
+

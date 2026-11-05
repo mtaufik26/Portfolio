@@ -7,7 +7,7 @@ import { useInView } from 'react-intersection-observer';
 export const useServiceAnimation = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.15,
+    threshold: 0.08,
   });
 
   return { ref, inView };

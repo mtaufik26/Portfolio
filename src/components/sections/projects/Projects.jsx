@@ -1,47 +1,66 @@
-import { motion } from 'framer-motion';
+import { useState, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { containerVariants } from './constants/projectVariants';
-import { projects, INITIAL_DISPLAY_COUNT } from './constants/projectsData';
+import { projects } from './constants/projectsData';
 import { useProjectsAnimation } from './hooks/useProjectsAnimation';
-import { useToggleProjects } from './hooks/useToggleProjects';
 import { BackgroundEffects } from './components/BackgroundEffects';
 import { ProjectsHeader } from './components/ProjectsHeader';
 import { ProjectsGrid } from './components/ProjectsGrid';
 import { ToggleButton } from './components/ToggleButton';
+import { AllProjectsModal } from './components/AllProjectsModal';
 
 const Projects = () => {
   const { ref, inView } = useProjectsAnimation();
-  const { showAll, displayedIndices, hasMore, handleToggle } = useToggleProjects(
-    INITIAL_DISPLAY_COUNT, 
-    projects.length
-  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <motion.section
-      ref={ref}
-      className="min-h-screen flex items-center px-4 sm:px-6 lg:px-8 relative overflow-hidden"
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      variants={containerVariants}
-    >
-      <BackgroundEffects />
+    <>
+      <div
+        ref={ref}
+        className="relative py-16 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 xl:px-12 overflow-hidden scroll-mt-20 sm:scroll-mt-24"
+      >
+        <BackgroundEffects />
 
-      <div className="max-w-6xl mx-auto w-full py-16 sm:py-24">
-        <ProjectsHeader />
-        
-        <ProjectsGrid 
-          displayedIndices={displayedIndices}
-          inView={inView}
-          onHoverChange={() => {}} // Bisa dikembangkan jika butuh state hoveredCard global
-        />
-        
-        <ToggleButton 
-          showAll={showAll} 
-          hasMore={hasMore} 
-          onToggle={handleToggle} 
-        />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div
+            className="space-y-8 sm:space-y-10"
+            initial="hidden"
+            animate={inView ? 'visible' : 'hidden'}
+            variants={containerVariants}
+          >
+            {/* Section Header */}
+            <ProjectsHeader />
+
+            {/* Featured Projects Slider Track */}
+            <ProjectsGrid
+              projectsList={projects}
+              inView={inView}
+            />
+
+            {/* Trigger Button to Open All Projects Modal */}
+            <ToggleButton
+              totalCount={projects.length}
+              onOpenAll={() => setIsModalOpen(true)}
+            />
+          </motion.div>
+        </div>
       </div>
-    </motion.section>
+
+      {/* Controlled Full Directory Archive Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <AllProjectsModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            projects={projects}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
-export default Projects;
+export default memo(Projects);
+
+
+

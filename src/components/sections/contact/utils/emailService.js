@@ -1,5 +1,27 @@
 import emailjs from '@emailjs/browser';
 import { getEmailConfig } from '../constants/emailConfig';
+import { sanitizeInput } from './validation';
+
+/**
+ * Simple rate limiter to prevent spam submissions
+ * Max 3 submissions per 5 minutes
+ */
+const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
+const RATE_LIMIT_MAX = 3;
+const submissionTimestamps = [];
+
+const isRateLimited = () => {
+  const now = Date.now();
+  // Remove timestamps outside the window
+  while (submissionTimestamps.length > 0 && submissionTimestamps[0] < now - RATE_LIMIT_WINDOW_MS) {
+    submissionTimestamps.shift();
+  }
+  return submissionTimestamps.length >= RATE_LIMIT_MAX;
+};
+
+const recordSubmission = () => {
+  submissionTimestamps.push(Date.now());
+};
 
 /**
  * Format tanggal untuk template email
@@ -18,14 +40,15 @@ export const formatEmailDate = () => {
 
 /**
  * Mapping formData ke template params EmailJS
+ * Sanitizes all user inputs to prevent XSS via email templates
  * @param {Object} formData - { name, email, message }
  * @returns {Object} templateParams
  */
 export const mapToTemplateParams = (formData) => {
   return {
-    user_name: formData.name,
-    user_email: formData.email,
-    message: formData.message,
+    user_name: sanitizeInput(formData.name),
+    user_email: sanitizeInput(formData.email),
+    message: sanitizeInput(formData.message),
     date: formatEmailDate(),
   };
 };
@@ -34,9 +57,14 @@ export const mapToTemplateParams = (formData) => {
  * Send email via EmailJS
  * @param {Object} formData - Form data dari user
  * @returns {Promise<Object>} Result dari EmailJS
- * @throws {Error} Jika kredensial tidak valid atau pengiriman gagal
+ * @throws {Error} Jika kredensial tidak valid, rate limited, atau pengiriman gagal
  */
 export const sendContactEmail = async (formData) => {
+  // Rate limiting check
+  if (isRateLimited()) {
+    throw new Error('Too many submissions. Please wait a few minutes before trying again.');
+  }
+
   const config = getEmailConfig();
   
   // Validasi kredensial sebelum kirim
@@ -53,5 +81,8 @@ export const sendContactEmail = async (formData) => {
     config.PUBLIC_KEY
   );
 
+  // Record successful submission for rate limiting
+  recordSubmission();
+
   return result;
-};
+};
