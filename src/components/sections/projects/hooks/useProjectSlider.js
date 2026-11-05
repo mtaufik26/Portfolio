@@ -2,7 +2,8 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 
 /**
  * Custom hook to manage the horizontal project slider with snap scrolling, drag support, and active index tracking.
- * @param {number} totalProjects - Total count of projects (8)
+ * Calculates exact child DOM offsets to eliminate gap-misalignment bugs and snap-physics fighting.
+ * @param {number} totalProjects - Total count of projects
  * @returns {Object}
  */
 export const useProjectSlider = (totalProjects) => {
@@ -15,33 +16,66 @@ export const useProjectSlider = (totalProjects) => {
   const scrollLeft = useRef(0);
   const sliderOffsetLeft = useRef(0);
   const rafId = useRef(null);
+  const isProgrammaticScroll = useRef(false);
+  const scrollTimeout = useRef(null);
 
-  // Update active index based on scroll position
+  // Update active index based on actual child element positions
   const handleScroll = useCallback(() => {
+    if (isProgrammaticScroll.current) return;
     const container = sliderRef.current;
-    if (!container) return;
+    if (!container || !container.children.length) return;
 
-    const width = container.clientWidth;
-    if (width > 0) {
-      const newIndex = Math.round(container.scrollLeft / width);
-      const clampedIndex = Math.max(0, Math.min(newIndex, totalProjects - 1));
+    if (rafId.current) cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(() => {
+      if (!container) return;
+      const viewportCenter = container.scrollLeft + container.clientWidth / 2;
+      let closestIndex = 0;
+      let minDistance = Infinity;
+
+      const children = container.children;
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        const childCenter = child.offsetLeft + child.clientWidth / 2;
+        const distance = Math.abs(viewportCenter - childCenter);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIndex = i;
+        }
+      }
+
+      const clampedIndex = Math.max(0, Math.min(closestIndex, totalProjects - 1));
       setCurrentIndex((prev) => (prev === clampedIndex ? prev : clampedIndex));
-    }
+    });
   }, [totalProjects]);
 
-  // Scroll to specific index smoothly
+  // Scroll to specific index smoothly using exact DOM child offsetLeft
   const scrollToIndex = useCallback((index) => {
     const container = sliderRef.current;
     if (!container) return;
 
     const clampedIndex = Math.max(0, Math.min(index, totalProjects - 1));
-    const targetLeft = clampedIndex * container.clientWidth;
+    const targetChild = container.children[clampedIndex];
+    if (!targetChild) return;
+
+    isProgrammaticScroll.current = true;
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+
+    // Temporarily disable CSS snap-type during smooth animation to prevent jitter/fighting
+    container.style.scrollSnapType = 'none';
 
     container.scrollTo({
-      left: targetLeft,
+      left: targetChild.offsetLeft,
       behavior: 'smooth',
     });
     setCurrentIndex(clampedIndex);
+
+    // Restore snap physics immediately after the smooth transition finishes
+    scrollTimeout.current = setTimeout(() => {
+      if (container) {
+        container.style.scrollSnapType = '';
+      }
+      isProgrammaticScroll.current = false;
+    }, 450);
   }, [totalProjects]);
 
   const handlePrev = useCallback(() => {
@@ -93,7 +127,11 @@ export const useProjectSlider = (totalProjects) => {
     const container = sliderRef.current;
     if (container) {
       container.addEventListener('scroll', handleScroll, { passive: true });
-      return () => container.removeEventListener('scroll', handleScroll);
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+        if (rafId.current) cancelAnimationFrame(rafId.current);
+        if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+      };
     }
   }, [handleScroll]);
 

@@ -162,8 +162,8 @@ export const ProjectImage = ({ src, alt, title, urlSlug, index }) => {
         </div>
       </div>
 
-      {/* Render via Portal so it escapes parent CSS transform & clipping */}
-      {typeof document !== 'undefined' && createPortal(lightboxModal, document.body)}
+      {/* Render via Portal only when open to avoid mounting 11 inactive backdrop portals */}
+      {typeof document !== 'undefined' && isLightboxOpen && createPortal(lightboxModal, document.body)}
     </>
   );
 };
