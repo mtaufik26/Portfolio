@@ -40,13 +40,12 @@ export const ProjectsGrid = ({ projectsList, inView }) => {
           onNext={handleNext}
         />
 
-        {/* Sliding Track with Native Snap Physics & Smooth Touch Acceleration */}
+        {/* Sliding Track with Native Snap Physics */}
         <div
           ref={sliderRef}
-          className="flex items-stretch overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full gap-6 sm:gap-8 pb-2 pt-1 cursor-grab active:cursor-grabbing touch-pan-x"
+          className="flex items-stretch overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full gap-6 sm:gap-8 pb-2 pt-1 cursor-grab active:cursor-grabbing"
           style={{
             WebkitOverflowScrolling: 'touch',
-            overscrollBehaviorX: 'contain',
           }}
           {...dragHandlers}
         >

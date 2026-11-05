@@ -145,7 +145,8 @@ export const ProjectImage = ({ src, alt, title, urlSlug, index }) => {
               decoding="async"
               width="800"
               height="500"
-              className="w-full h-full object-cover object-top transform transition-transform duration-500 ease-out group-hover/img:scale-[1.04]"
+              draggable="false"
+              className="w-full h-full object-cover object-top transform transition-transform duration-500 ease-out group-hover/img:scale-[1.04] pointer-events-none select-none"
               onError={handleError}
             />
           )}

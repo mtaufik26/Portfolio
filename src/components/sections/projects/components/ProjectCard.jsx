@@ -1,6 +1,4 @@
 import { memo } from 'react';
-import { motion } from 'framer-motion';
-import { cardVariants } from '../constants/projectVariants';
 import { ProjectImage } from './ProjectImage';
 import { ProjectActions } from './ProjectActions';
 import { getTechIcon } from '../utils/projectIcons';
@@ -24,19 +22,14 @@ const ProjectCardComponent = ({ project, index, inView }) => {
   const displayHighlights = (project.highlights || []).slice(0, 3);
 
   return (
-    <motion.article
-      className="group relative rounded-3xl overflow-hidden w-full h-full flex flex-col shrink-0 snap-center
+    <article
+      className="group relative rounded-3xl overflow-hidden w-full h-full flex flex-col
         bg-white dark:bg-[#0D0D11] sm:bg-white/80 sm:dark:bg-[#0D0D11]/90 sm:backdrop-blur-md
         border border-neutral-200/80 dark:border-white/[0.08]
         hover:border-neutral-300 dark:hover:border-white/20
         shadow-[0_2px_16px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.5)]
         hover:shadow-[0_16px_48px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_16px_48px_rgba(0,0,0,0.8)]
-        transition-[border-color,box-shadow] duration-300"
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      variants={cardVariants}
-      custom={index}
-      whileHover={{ y: -4, transition: { duration: 0.25 } }}
+        transition-[border-color,box-shadow,transform] duration-200 sm:hover:-translate-y-1"
     >
       {/* Widescreen 12-Column Grid with fixed uniform height on desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 relative z-10 w-full flex-1 lg:h-[490px]">
@@ -140,7 +133,7 @@ const ProjectCardComponent = ({ project, index, inView }) => {
           </div>
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 };
 
