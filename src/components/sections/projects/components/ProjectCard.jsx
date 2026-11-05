@@ -26,7 +26,7 @@ const ProjectCardComponent = ({ project, index, inView }) => {
   return (
     <motion.article
       className="group relative rounded-3xl overflow-hidden w-full h-full flex flex-col shrink-0 snap-center
-        bg-white/80 dark:bg-[#0D0D11]/90 backdrop-blur-md
+        bg-white dark:bg-[#0D0D11] sm:bg-white/80 sm:dark:bg-[#0D0D11]/90 sm:backdrop-blur-md
         border border-neutral-200/80 dark:border-white/[0.08]
         hover:border-neutral-300 dark:hover:border-white/20
         shadow-[0_2px_16px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.5)]
@@ -52,7 +52,7 @@ const ProjectCardComponent = ({ project, index, inView }) => {
         </div>
 
         {/* Right Column: Engineering Dossier & Actions (5 cols on Desktop) */}
-        <div className="lg:col-span-5 p-6 sm:p-7 lg:p-8 flex flex-col justify-between h-full bg-white/50 dark:bg-[#0D0D11]/60">
+        <div className="lg:col-span-5 p-6 sm:p-7 lg:p-8 flex flex-col justify-between h-full bg-white dark:bg-[#0D0D11] sm:bg-white/50 sm:dark:bg-[#0D0D11]/60">
           <div className="flex flex-col">
             {/* Metadata Header */}
             <div className="flex items-center justify-between gap-3 mb-3 shrink-0">

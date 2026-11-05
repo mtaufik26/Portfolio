@@ -1,8 +1,10 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 
 /**
- * Custom hook to manage the horizontal project slider with snap scrolling, drag support, and active index tracking.
- * Calculates exact child DOM offsets to eliminate gap-misalignment bugs and snap-physics fighting.
+ * Custom hook to manage the horizontal project slider.
+ * Uses IntersectionObserver for ZERO-CPU scroll tracking (no forced reflows during touch swipes).
+ * Uses native scrollIntoView for buttery-smooth snap-aligned programmatic navigation.
+ *
  * @param {number} totalProjects - Total count of projects
  * @returns {Object}
  */
@@ -10,72 +12,62 @@ export const useProjectSlider = (totalProjects) => {
   const sliderRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Drag state
+  // Drag state for desktop mouse drag
   const isDragging = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
   const sliderOffsetLeft = useRef(0);
   const rafId = useRef(null);
-  const isProgrammaticScroll = useRef(false);
-  const scrollTimeout = useRef(null);
 
-  // Update active index based on actual child element positions
-  const handleScroll = useCallback(() => {
-    if (isProgrammaticScroll.current) return;
+  // IntersectionObserver to track visible card effortlessly without reading offsetLeft on every scroll frame
+  useEffect(() => {
     const container = sliderRef.current;
-    if (!container || !container.children.length) return;
+    if (!container) return;
 
-    if (rafId.current) cancelAnimationFrame(rafId.current);
-    rafId.current = requestAnimationFrame(() => {
-      if (!container) return;
-      const viewportCenter = container.scrollLeft + container.clientWidth / 2;
-      let closestIndex = 0;
-      let minDistance = Infinity;
+    const cards = container.querySelectorAll('[data-project-index]');
+    if (!cards.length) return;
 
-      const children = container.children;
-      for (let i = 0; i < children.length; i++) {
-        const child = children[i];
-        const childCenter = child.offsetLeft + child.clientWidth / 2;
-        const distance = Math.abs(viewportCenter - childCenter);
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestIndex = i;
-        }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.getAttribute('data-project-index'));
+            if (!Number.isNaN(idx)) {
+              setCurrentIndex(idx);
+            }
+          }
+        });
+      },
+      {
+        root: container,
+        threshold: 0.6, // Active when at least 60% of card is in view
       }
+    );
 
-      const clampedIndex = Math.max(0, Math.min(closestIndex, totalProjects - 1));
-      setCurrentIndex((prev) => (prev === clampedIndex ? prev : clampedIndex));
-    });
+    cards.forEach((card) => observer.observe(card));
+
+    return () => {
+      observer.disconnect();
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
   }, [totalProjects]);
 
-  // Scroll to specific index smoothly using exact DOM child offsetLeft
+  // Scroll to specific index smoothly using native scrollIntoView matching snap-center
   const scrollToIndex = useCallback((index) => {
     const container = sliderRef.current;
     if (!container) return;
 
     const clampedIndex = Math.max(0, Math.min(index, totalProjects - 1));
-    const targetChild = container.children[clampedIndex];
-    if (!targetChild) return;
+    const targetChild = container.querySelector(`[data-project-index="${clampedIndex}"]`);
 
-    isProgrammaticScroll.current = true;
-    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-
-    // Temporarily disable CSS snap-type during smooth animation to prevent jitter/fighting
-    container.style.scrollSnapType = 'none';
-
-    container.scrollTo({
-      left: targetChild.offsetLeft,
-      behavior: 'smooth',
-    });
-    setCurrentIndex(clampedIndex);
-
-    // Restore snap physics immediately after the smooth transition finishes
-    scrollTimeout.current = setTimeout(() => {
-      if (container) {
-        container.style.scrollSnapType = '';
-      }
-      isProgrammaticScroll.current = false;
-    }, 450);
+    if (targetChild) {
+      targetChild.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      });
+      setCurrentIndex(clampedIndex);
+    }
   }, [totalProjects]);
 
   const handlePrev = useCallback(() => {
@@ -86,7 +78,7 @@ export const useProjectSlider = (totalProjects) => {
     scrollToIndex(currentIndex + 1);
   }, [currentIndex, scrollToIndex]);
 
-  // Mouse Drag handlers
+  // Desktop Mouse Drag handlers
   const handleMouseDown = useCallback((e) => {
     if (!sliderRef.current) return;
     isDragging.current = true;
@@ -118,22 +110,8 @@ export const useProjectSlider = (totalProjects) => {
       sliderRef.current.style.cursor = 'grab';
       sliderRef.current.style.userSelect = '';
       sliderRef.current.style.scrollSnapType = '';
-      // Snap to nearest card after drag release
-      handleScroll();
     }
-  }, [handleScroll]);
-
-  useEffect(() => {
-    const container = sliderRef.current;
-    if (container) {
-      container.addEventListener('scroll', handleScroll, { passive: true });
-      return () => {
-        container.removeEventListener('scroll', handleScroll);
-        if (rafId.current) cancelAnimationFrame(rafId.current);
-        if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-      };
-    }
-  }, [handleScroll]);
+  }, []);
 
   return {
     sliderRef,

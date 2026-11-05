@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { ProjectCard } from './ProjectCard';
 import { ProjectNavigationArrows } from './ProjectNavigationArrows';
 import { ProjectNavigationControl } from './ProjectNavigationControl';
@@ -45,14 +44,17 @@ export const ProjectsGrid = ({ projectsList, inView }) => {
         <div
           ref={sliderRef}
           className="flex items-stretch overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full gap-6 sm:gap-8 pb-2 pt-1 cursor-grab active:cursor-grabbing touch-pan-x"
-          style={{ WebkitOverflowScrolling: 'touch' }}
+          style={{
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehaviorX: 'contain',
+          }}
           {...dragHandlers}
         >
           {projectsList.map((project, index) => (
             <div
               key={project.id}
+              data-project-index={index}
               className="w-full min-w-full shrink-0 snap-center flex"
-              style={{ contentVisibility: 'auto' }}
             >
               <ProjectCard
                 project={project}
